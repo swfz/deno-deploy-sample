@@ -1,3 +1,5 @@
+import { ulid } from "jsr:@std/ulid";
+
 const kv = await Deno.openKv();
 
 Deno.serve(async (request: Request) => {
@@ -12,6 +14,11 @@ Deno.serve(async (request: Request) => {
   // Redirect short links
   const slug = request.url.split("/").pop() || "";
   const url = (await kv.get(["links", slug])).value as string;
+
+  // logging
+  const now = new Date()
+  await kv.set(["logs", now.getFullYear(), now.getMonth(), now.getDate(), ulid()], request, { expireIn: 1000 * 60 * 60 * 24 * 30 });
+
   if (url) {
     return Response.redirect(url, 301);
   } else {
