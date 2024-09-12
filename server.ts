@@ -1,6 +1,6 @@
 import { ulid } from "jsr:@std/ulid";
 
-const kv = await Deno.openKv();
+const kv = await Deno.openKv('sample');
 
 const logObject = async (now: Date, req: Request) => {
   const ts = Math.floor(now.getTime() / 1000);
